@@ -18,7 +18,7 @@ char * str_cat(char **dst, const char *src) {
     unsigned int dynamicLenDst = 0, lenSrc = 0;
     if (*dst) while (*(*dst + dynamicLenDst++));
     while (*(src + lenSrc++));
-    *dst = (char*) realloc(*dst, (dynamicLenDst > 0 ? dynamicLenDst-- : 0) + lenSrc);
+    *dst = (char*) realloc(*dst, (!dynamicLenDst ? 0 : dynamicLenDst--) + lenSrc);
     while (*(*dst + dynamicLenDst++) = *(src++));
     return *dst;
 }
