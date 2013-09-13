@@ -3,25 +3,24 @@
 #include <string.h>
 #include <stdarg.h>
 
-void str_cpy(char **dst, const char *src) {
-    if (!src) {
-        *dst = NULL;
-        return;
-    }
+char * str_cpy(char **dst, const char *src) {
+    if (!src) return *dst = NULL;
     unsigned int len = 0;
     while (*(src + len++));
     *dst = (char*) realloc(*dst, len);
     char *tmp = *dst;
     while (*tmp++ = *src++);
+    return *dst;
 }
 
-void str_cat(char **dst, const char *src) {
-    if (!src) return;
+char * str_cat(char **dst, const char *src) {
+    if (!src) return *dst;
     unsigned int dynamicLenDst = 0, lenSrc = 0;
     if (*dst) while (*(*dst + dynamicLenDst++));
     while (*(src + lenSrc++));
     *dst = (char*) realloc(*dst, (dynamicLenDst > 0 ? dynamicLenDst-- : 0) + lenSrc);
     while (*(*dst + dynamicLenDst++) = *(src++));
+    return *dst;
 }
 
 void str_printf(char **a, const char *b, const char *c){}
