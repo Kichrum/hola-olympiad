@@ -16,9 +16,10 @@ void dump(char* text, char* arr, int n) {
 
 /**
  * Concatenates strings.
- * @param dst destination
- * @param src source
- * @return char *
+ *
+ * @param char* dst destination
+ * @param const char* src source
+ * @return char* ptr to concatenated string
  */
 char * str_cat(char **dst, const char *src) {
     unsigned int lenDst = 0, lenSrc = 0;
@@ -27,17 +28,20 @@ char * str_cat(char **dst, const char *src) {
     if (*dst) while (*(*dst + lenDst++));
     while (*(src + lenSrc++));
     new = (char*) calloc((!lenDst ? 0 : --lenDst) + lenSrc, 1);
-    if (!new) return NULL; // TODO: exit(1) or throw some exception - depends on project.
+    if (!new) return NULL; // TODO: exit(1) or throw some exception - depends on the project.
     while (lenSrc--) *(new + lenDst + lenSrc) = *(src + lenSrc);
     while (lenDst--) *(new + lenDst) = *(*dst + lenDst);
+    free(*dst); // - if we sure we won't use something like str_cat(&s, a) where *a = s...
     return *dst = new;
 }
 
 /**
  * Copies the string.
- * @param dst destination
- * @param src source
- * @return char *
+ *
+ * @note Don't forget free destination memory before call this function.
+ * @param char* dst destination
+ * @param const char* src source
+ * @return char* ptr to copied string
  */
 char * str_cpy(char **dst, const char *src) {
     *dst = NULL;
