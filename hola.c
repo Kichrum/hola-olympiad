@@ -3,6 +3,17 @@
 #include <string.h>
 #include <stdarg.h>
 
+void dump(char* text, char* arr, int n) {
+    puts(text);
+    int i = 0;
+    while (n > 0) {
+        printf("%2c:%2d,", *(arr + i), *(arr + i));
+        n--;
+        i++;
+    }
+    puts("");
+}
+
 /**
  * Concatenates strings.
  * @param dst destination
