@@ -3,24 +3,34 @@
 #include <string.h>
 #include <stdarg.h>
 
-char * str_cpy(char **dst, const char *src) {
-    if (!src) return *dst = NULL;
-    unsigned int len = 0;
-    while (*(src + len++));
-    *dst = (char*) realloc(*dst, len);
-    char *tmp = *dst;
-    while (*tmp++ = *src++);
-    return *dst;
+/**
+ * Concatenates strings.
+ * @param dst destination
+ * @param src source
+ * @return char *
+ */
+char * str_cat(char **dst, const char *src) {
+    unsigned int lenDst = 0, lenSrc = 0;
+    char *new;
+    if (!src) return *dst;
+    if (*dst) while (*(*dst + lenDst++));
+    while (*(src + lenSrc++));
+    new = (char*) calloc((!lenDst ? 0 : --lenDst) + lenSrc, 1);
+    if (!new) return NULL; // TODO: exit(1) or throw some exception - depends on project.
+    while (lenSrc--) *(new + lenDst + lenSrc) = *(src + lenSrc);
+    while (lenDst--) *(new + lenDst) = *(*dst + lenDst);
+    return *dst = new;
 }
 
-char * str_cat(char **dst, const char *src) {
-    if (!src) return *dst;
-    unsigned int dynamicLenDst = 0, lenSrc = 0;
-    if (*dst) while (*(*dst + dynamicLenDst++));
-    while (*(src + lenSrc++));
-    *dst = (char*) realloc(*dst, (!dynamicLenDst ? 0 : --dynamicLenDst) + lenSrc);
-    while (*(*dst + dynamicLenDst++) = *(src++));
-    return *dst;
+/**
+ * Copies the string.
+ * @param dst destination
+ * @param src source
+ * @return char *
+ */
+char * str_cpy(char **dst, const char *src) {
+    *dst = NULL;
+    return *dst = str_cat(dst, src);
 }
 
 void str_printf(char **a, const char *b, const char *c){}
