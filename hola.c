@@ -27,25 +27,32 @@ char * str_cat(char **dst, const char *src) {
     if (!src) return *dst;
     if (*dst) while (*(*dst + lenDst++));
     while (*(src + lenSrc++));
-    new = (char*) calloc((!lenDst ? 0 : --lenDst) + lenSrc, 1);
+    new = (char*) malloc((!lenDst ? 0 : --lenDst) + lenSrc);
     if (!new) return NULL; // TODO: exit(1) or throw some exception - depends on the project.
     while (lenSrc--) *(new + lenDst + lenSrc) = *(src + lenSrc);
     while (lenDst--) *(new + lenDst) = *(*dst + lenDst);
-    free(*dst); // - if we sure we won't use something like str_cat(&s, a) where *a = s...
+    free(*dst);
     return *dst = new;
 }
 
 /**
  * Copies the string.
  *
- * @note Don't forget free destination memory before call this function.
  * @param char* dst destination
  * @param const char* src source
  * @return char* ptr to copied string
  */
 char * str_cpy(char **dst, const char *src) {
-    *dst = NULL;
-    return *dst = str_cat(dst, src);
+    // *dst = NULL; return str_cat(*dst, src);
+    unsigned int lenSrc = 0;
+    char *new;
+    if (!src) return *dst;
+    while (*(src + lenSrc++));
+    new = (char*) malloc(lenSrc);
+    if (!new) return NULL; // TODO: exit(1) or throw some exception - depends on the project.
+    while (lenSrc--) *(new + lenSrc) = *(src + lenSrc);
+    free(*dst);
+    return *dst = new;
 }
 
 void str_printf(char **a, const char *b, const char *c){}
