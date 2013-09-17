@@ -13,14 +13,9 @@ void dump(char* text, const char* arr, int n) {
     }
     puts("");
 }
-/**
- * Concatenates strings.
- *
- * @param char* dst destination
- * @param const char* src source
- * @return char* ptr to concatenated string
- */
-int str_cat(char **dst, const char *src) {
+
+int str_cat(char **dst, const char *src)
+{
     unsigned int dst_len = 0, src_len = 0;
     char *new = NULL;
     const char *dst_tmp = *dst, *src_tmp = src;
@@ -31,14 +26,8 @@ int str_cat(char **dst, const char *src) {
     return !(*dst = new);
 }
 
-/**
- * Copies the string.
- *
- * @param char* dst destination
- * @param const char* src source
- * @return char* ptr to copied string
- */
-int str_cpy(char **dst, const char *src) {
+int str_cpy(char **dst, const char *src)
+{
     unsigned int src_len = 0;
     char *new = NULL;
     const char *tmp = src;
