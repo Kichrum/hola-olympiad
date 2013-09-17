@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdarg.h>
 
-void dump(char* text, char* arr, int n) {
+void dump(char* text, const char* arr, int n) {
     puts(text);
     int i = 0;
     while (n > 0) {
@@ -13,7 +13,6 @@ void dump(char* text, char* arr, int n) {
     }
     puts("");
 }
-
 /**
  * Concatenates strings.
  *
@@ -25,16 +24,11 @@ int str_cat(char **dst, const char *src) {
     unsigned int dst_len = 0, src_len = 0;
     char *new = NULL;
     const char *dst_tmp = *dst, *src_tmp = src;
-    if (!src) return 0;
-    while (*dst_tmp++);
-    dst_len = dst_tmp - *dst;
-    while (*src_tmp++);
-    src_len = src_tmp - src;
-    if (!(new = calloc(dst_len + src_len - 1, 1))) return 1;
-    if (!memcpy(new, *dst, dst_len) || !memcpy(new + dst_len - 1, src, src_len)) return 1;
-    free(*dst);
-    *dst = new;
-    return 0;
+    if (dst_tmp) while (*dst_tmp++);
+    if (src_tmp) while (*src_tmp++);
+    if (!(new = calloc((dst_len = dst_tmp - *dst) + (src_len = src_tmp - src), 1)) || !memcpy(new, *dst, dst_len) || !memcpy(new + (!dst_len ? 0 : dst_len - 1), src, src_len)) return 1;
+    if (*dst) free(*dst);
+    return !(*dst = new);
 }
 
 /**
@@ -48,14 +42,10 @@ int str_cpy(char **dst, const char *src) {
     unsigned int src_len = 0;
     char *new = NULL;
     const char *tmp = src;
-    if (!src) return 0;
-    while (*tmp++);
-    src_len = tmp - src;
-    if (!(new = calloc(src_len, 1))) return 1;
-    if (!memcpy(new, src, src_len)) return 1; //bcopy(src, new, src_len);
-    free(*dst);
-    *dst = new;
-    return 0;
+    if (src) while (*tmp++);
+    if (!(new = calloc(src_len = tmp - src, 1)) || !memcpy(new, src, src_len)) return 1;
+    if (*dst) free(*dst);
+    return !(*dst = new);
 }
 
 void str_printf(char **a, const char *b, const char *c){}
