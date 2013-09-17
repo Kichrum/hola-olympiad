@@ -21,18 +21,20 @@ void dump(char* text, char* arr, int n) {
  * @param const char* src source
  * @return char* ptr to concatenated string
  */
-char * str_cat(char **dst, const char *src) {
-    unsigned int lenDst = 0, lenSrc = 0;
-    char *new;
-    if (!src) return *dst;
-    if (*dst) while (*(*dst + lenDst++));
-    while (*(src + lenSrc++));
-    new = (char*) malloc((!lenDst ? 0 : --lenDst) + lenSrc);
-    if (!new) return NULL; // TODO: exit(1) or throw some exception - depends on the project.
-    while (lenSrc--) *(new + lenDst + lenSrc) = *(src + lenSrc);
-    while (lenDst--) *(new + lenDst) = *(*dst + lenDst);
+int str_cat(char **dst, const char *src) {
+    unsigned int dst_len = 0, src_len = 0;
+    char *new = NULL;
+    const char *dst_tmp = *dst, *src_tmp = src;
+    if (!src) return 0;
+    while (*dst_tmp++);
+    dst_len = dst_tmp - *dst;
+    while (*src_tmp++);
+    src_len = src_tmp - src;
+    if (!(new = calloc(dst_len + src_len - 1, 1))) return 1;
+    if (!memcpy(new, *dst, dst_len) || !memcpy(new + dst_len - 1, src, src_len)) return 1;
     free(*dst);
-    return *dst = new;
+    *dst = new;
+    return 0;
 }
 
 /**
@@ -42,17 +44,18 @@ char * str_cat(char **dst, const char *src) {
  * @param const char* src source
  * @return char* ptr to copied string
  */
-char * str_cpy(char **dst, const char *src) {
-    // *dst = NULL; return str_cat(*dst, src);
-    unsigned int lenSrc = 0;
-    char *new;
-    if (!src) return *dst;
-    while (*(src + lenSrc++));
-    new = (char*) malloc(lenSrc);
-    if (!new) return NULL; // TODO: exit(1) or throw some exception - depends on the project.
-    while (lenSrc--) *(new + lenSrc) = *(src + lenSrc);
+int str_cpy(char **dst, const char *src) {
+    unsigned int src_len = 0;
+    char *new = NULL;
+    const char *tmp = src;
+    if (!src) return 0;
+    while (*tmp++);
+    src_len = tmp - src;
+    if (!(new = calloc(src_len, 1))) return 1;
+    if (!memcpy(new, src, src_len)) return 1; //bcopy(src, new, src_len);
     free(*dst);
-    return *dst = new;
+    *dst = new;
+    return 0;
 }
 
 void str_printf(char **a, const char *b, const char *c){}
