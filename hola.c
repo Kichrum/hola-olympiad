@@ -14,6 +14,17 @@ void dump(char* text, const char* arr, int n) {
     puts("");
 }
 
+void throw_error(const char *str, const char *a, const char *b) {
+    printf("ERROR on %s : \"%s\" != \"%s\"\n", str, a, b);
+    exit(1);
+}
+
+void compare(const char *str, const char *a, const char *b) {
+    if(strcmp(a, b)) {
+        throw_error(str, a, b);
+    }
+}
+
 int str_cat(char **dst, const char *src)
 {
     unsigned int dst_len = 0, src_len = 0;
@@ -46,8 +57,25 @@ void str_free(char **a){}
  * Welcome to TheCodeIL.com Challenge!
  */
 
+void testing() {
+    char *s = NULL;
+    str_cpy(&s, "Hola Hola");
+    compare("str_cpy(&s, \"Hola Hola\");", s, "Hola Hola");
+    str_cpy(&s, s+5);
+    compare("str_cpy(&s, s+5);", s, "Hola");
+    str_cat(&s, " World");
+    compare("str_cat(&s, \" World\");", s, "Hola World");
+    str_cat(&s, s+5);
+    compare("str_cat(&s, s+5);", s, "Hola WorldWorld");
+    s = NULL; str_cpy(&s, s);
+    compare("s = NULL; str_cpy(&s, s);", s, "");
+    s = NULL; str_cat(&s, s);
+    compare("s = NULL; str_cat(&s, s);", s, "");
+}
+
 int main(int argc, char *argv[])
 {
+    testing();
     char *s = NULL;
     str_cpy(&s, "Hola Hola");
     str_cpy(&s, s+5);
