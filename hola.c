@@ -20,40 +20,53 @@ void throw_error(const char *str, const char *a, const char *b) {
 }
 
 void compare(const char *str, const char *a, const char *b) {
+    printf("COMPARE on %s : \"%s\" == \"%s\"\n", str, a, b);
     if(strcmp(a, b)) {
         throw_error(str, a, b);
     }
 }
 
-int str_cat(char **dst, const char *src)
+size_t str_cat(char **dst, const char *src)
 {
-    if (!dst) return 1;
-    unsigned int dst_len = 0, src_len = 0;
+    if (!dst) return 0;
+    size_t dst_len = 0, src_len = 0, len = 0;
+    int overlap = 0;
     char *new = NULL;
     const char *dst_tmp = *dst, *src_tmp = src;
-    if (dst_tmp) while (*dst_tmp++);
-    if (src_tmp) while (*src_tmp++);
-    if (!(new = calloc((dst_len = dst_tmp - *dst) + (src_len = src_tmp - src), 1)) || !memcpy(new, *dst, dst_len) || !memcpy(new + (!dst_len ? 0 : dst_len - 1), src, src_len)) {
+    if (dst_tmp && *dst_tmp) while (*++dst_tmp);
+    if (src_tmp && *src_tmp) while (*++src_tmp);
+    if (!(new = (
+        overlap = (dst_tmp > src_tmp ? dst_tmp : src_tmp) - 
+            (*dst < src ? *dst : src) <= (
+                len = (dst_len = dst_tmp - *dst) + (src_len = src_tmp - src)
+            )
+        ) ? calloc(len + 1, 1) : realloc(*dst, len + 1)) ||
+        (overlap && !memcpy(new, *dst, dst_len)) ||
+        !memcpy(new + dst_len, src, src_len))
+    {
         fprintf(stderr, "Unable to allocate memory for a new string.");
         exit(1);
     }
-    if (*dst) free(*dst);
-    return !(*dst = new);
+    if (overlap) free(*dst);
+    *dst = new;
+    return len;
 }
 
-int str_cpy(char **dst, const char *src)
+size_t str_cpy(char **dst, const char *src)
 {
-    if (!dst) return 1;
-    unsigned int src_len = 0;
+    if (!dst) return 0;
+    size_t src_len = 0;
     char *new = NULL;
     const char *tmp = src;
-    if (src) while (*tmp++);
-    if (!(new = calloc(src_len = tmp - src, 1)) || !memcpy(new, src, src_len)) {
+    if (src && *src) while (*++tmp);
+    if (!(new = calloc((src_len = tmp - src) + 1, 1)) || !memcpy(new, src, src_len))
+    {
         fprintf(stderr, "Unable to allocate memory for a new string.");
         exit(1);
     }
-    if (*dst) free(*dst);
-    return !(*dst = new);
+    free(*dst);
+    *dst = new;
+    return src_len;
 }
 
 void str_printf(char **a, const char *b, const char *c){}
@@ -79,8 +92,16 @@ void testing() {
     compare("str_cat(&s, s+5);", s, "Hola WorldWorld");
     s = NULL; str_cpy(&s, s);
     compare("s = NULL; str_cpy(&s, s);", s, "");
+    str_cat(&s, "a");
+    compare("str_cat(&s, \"a\");", s, "a");
     s = NULL; str_cat(&s, s);
     compare("s = NULL; str_cat(&s, s);", s, "");
+    str_cpy(&s, "a");
+    compare("str_cpy(&s, \"a\");", s, "a");
+    s = NULL; str_cat(&s, "");
+    compare("s = NULL; str_cat(&s, \"\");", s, "");
+    s = NULL; str_cpy(&s, "");
+    compare("s = NULL; str_cpy(&s, \"\");", s, "");
 }
 
 int main(int argc, char *argv[])
