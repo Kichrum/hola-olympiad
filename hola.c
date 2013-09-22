@@ -27,6 +27,7 @@ void compare(const char *str, const char *a, const char *b) {
 
 int str_cat(char **dst, const char *src)
 {
+    if (!dst) return 1;
     unsigned int dst_len = 0, src_len = 0;
     char *new = NULL;
     const char *dst_tmp = *dst, *src_tmp = src;
@@ -39,6 +40,7 @@ int str_cat(char **dst, const char *src)
 
 int str_cpy(char **dst, const char *src)
 {
+    if (!dst) return 1;
     unsigned int src_len = 0;
     char *new = NULL;
     const char *tmp = src;
@@ -59,6 +61,8 @@ void str_free(char **a){}
 
 void testing() {
     char *s = NULL;
+    str_cpy(NULL, NULL);
+    str_cat(NULL, NULL);
     str_cpy(&s, "Hola Hola");
     compare("str_cpy(&s, \"Hola Hola\");", s, "Hola Hola");
     str_cpy(&s, s+5);
