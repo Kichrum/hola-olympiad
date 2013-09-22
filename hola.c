@@ -33,7 +33,10 @@ int str_cat(char **dst, const char *src)
     const char *dst_tmp = *dst, *src_tmp = src;
     if (dst_tmp) while (*dst_tmp++);
     if (src_tmp) while (*src_tmp++);
-    if (!(new = calloc((dst_len = dst_tmp - *dst) + (src_len = src_tmp - src), 1)) || !memcpy(new, *dst, dst_len) || !memcpy(new + (!dst_len ? 0 : dst_len - 1), src, src_len)) return 1;
+    if (!(new = calloc((dst_len = dst_tmp - *dst) + (src_len = src_tmp - src), 1)) || !memcpy(new, *dst, dst_len) || !memcpy(new + (!dst_len ? 0 : dst_len - 1), src, src_len)) {
+        fprintf(stderr, "Unable to allocate memory for a new string.");
+        exit(1);
+    }
     if (*dst) free(*dst);
     return !(*dst = new);
 }
@@ -45,7 +48,10 @@ int str_cpy(char **dst, const char *src)
     char *new = NULL;
     const char *tmp = src;
     if (src) while (*tmp++);
-    if (!(new = calloc(src_len = tmp - src, 1)) || !memcpy(new, src, src_len)) return 1;
+    if (!(new = calloc(src_len = tmp - src, 1)) || !memcpy(new, src, src_len)) {
+        fprintf(stderr, "Unable to allocate memory for a new string.");
+        exit(1);
+    }
     if (*dst) free(*dst);
     return !(*dst = new);
 }
