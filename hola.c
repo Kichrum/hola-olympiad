@@ -27,10 +27,16 @@ void compare(const char *str, const char *a, const char *b) {
 }
 
 #define ENOMEM 12
+#define EINVAL 22
 
 int str_cat(char **dst, const char *src)
 {
-    if (!dst) return EXIT_SUCCESS;
+    if (!dst)
+#if defined(EINVAL)
+        return EINVAL;
+#else
+        return EXIT_FAILURE;
+#endif
     size_t dst_len = 0, src_len = 0, len = 0;
     int overlap = 0;
     char *new = NULL;
@@ -57,7 +63,12 @@ int str_cat(char **dst, const char *src)
 
 int str_cpy(char **dst, const char *src)
 {
-    if (!dst) return EXIT_SUCCESS;
+    if (!dst)
+#if defined(EINVAL)
+        return EINVAL;
+#else
+        return EXIT_FAILURE;
+#endif
     size_t src_len = 0;
     char *new = NULL;
     const char *tmp = src;
