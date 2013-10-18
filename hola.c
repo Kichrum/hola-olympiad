@@ -100,8 +100,12 @@ void testing() {
     compare("str_cpy(&s, \"a\");", s, "a");
     s = NULL; str_cat(&s, "");
     compare("s = NULL; str_cat(&s, \"\");", s, "");
+    str_cat(&s, "Hola Hola");
+    compare("str_cat(&s, \"Hola Hola\");", s, "Hola Hola");
     s = NULL; str_cpy(&s, "");
     compare("s = NULL; str_cpy(&s, \"\");", s, "");
+    str_cpy(&s, "Hola Hola");
+    compare("str_cpy(&s, \"Hola Hola\");", s, "Hola Hola");
 }
 
 int main(int argc, char *argv[])
