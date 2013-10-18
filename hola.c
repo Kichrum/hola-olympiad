@@ -26,6 +26,8 @@ void compare(const char *str, const char *a, const char *b) {
     }
 }
 
+#define ENOMEM 12
+
 int str_cat(char **dst, const char *src)
 {
     if (!dst) return EXIT_SUCCESS;
@@ -43,7 +45,11 @@ int str_cat(char **dst, const char *src)
         ) ? calloc(len + 1, 1) : realloc(*dst, len + 1)) ||
         (overlap && !memcpy(new, *dst, dst_len)) ||
         !memcpy(new + dst_len, src, src_len))
+#if defined(ENOMEM)
+        return ENOMEM;
+#else
         return EXIT_FAILURE;
+#endif
     if (overlap) free(*dst);
     *dst = new;
     return EXIT_SUCCESS;
@@ -57,7 +63,11 @@ int str_cpy(char **dst, const char *src)
     const char *tmp = src;
     if (src && *src) while (*++tmp);
     if (!(new = calloc((src_len = tmp - src) + 1, 1)) || !memcpy(new, src, src_len))
+#if defined(ENOMEM)
+        return ENOMEM;
+#else
         return EXIT_FAILURE;
+#endif
     free(*dst);
     *dst = new;
     return EXIT_SUCCESS;
